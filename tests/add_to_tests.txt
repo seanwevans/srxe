@@ -1,0 +1,120 @@
+
+
+    // Test subroutine calls
+    const char *regex1 = "(a(b))(?1)";
+    const char *text1 = "abb";
+    if (match(regex1, text1)) {
+        printf("Subroutine call match: %s\n", text1);
+    }
+
+    // Test lazy quantifier for +
+    const char *regex2 = "a+?";
+    const char *text2 = "aaaaa";
+    if (match(regex2, text2)) {
+        printf("Lazy quantifier match: %s\n", text2);
+    }
+
+    // Test conditional matching
+    const char *regex3 = "(a)?(?(1)b|c)";
+    const char *text3 = "ab";
+    if (match(regex3, text3)) {
+        printf("Conditional match: %s\n", text3);
+    }
+
+    // Test possessive quantifiers
+    const char *regex4 = "a*+";
+    const char *text4 = "aaaa";
+    if (match(regex4, text4)) {
+        printf("Possessive quantifier match: %s\n", text4);
+    }
+
+    // Test Unicode script support
+    const char *regex5 = "\\p{L}";
+    const char *text5 = "A";
+    if (match(regex5, text5)) {
+        printf("Unicode script match: %s\n", text5);
+    }
+
+    // Test subroutine calls
+    const char *regex1 = "(a(b))(?1)";
+    const char *text1 = "abb";
+    if (match(regex1, text1)) {
+        printf("Subroutine call match: %s\n", text1);
+    }
+
+    // Test lazy quantifier for +
+    const char *regex2 = "a+?";
+    const char *text2 = "aaaaa";
+    if (match(regex2, text2)) {
+        printf("Lazy quantifier match: %s\n", text2);
+    }
+
+    // Test conditional matching
+    const char *regex3 = "(a)?(?(1)b|c)";
+    const char *text3 = "ab";
+    if (match(regex3, text3)) {
+        printf("Conditional match: %s\n", text3);
+    }
+
+    // Test possessive quantifiers
+    const char *regex4 = "a*+";
+    const char *text4 = "aaaa";
+    if (match(regex4, text4)) {
+        printf("Possessive quantifier match: %s\n", text4);
+    }
+
+    // Test Unicode script support
+    const char *regex5 = "\\p{L}";
+    const char *text5 = "A";
+    if (match(regex5, text5)) {
+        printf("Unicode script match: %s\n", text5);
+    }
+
+    // Test lookahead assertion
+    const char *regex1 = "a(?=b)";
+    const char *text1 = "ab";
+    if (match(regex1, text1)) {
+        printf("Lookahead match: %s\n", text1);
+    }
+
+    // Test lookbehind assertion
+    const char *regex2 = "(?<=a)b";
+    const char *text2 = "ab";
+    if (match(regex2, text2)) {
+        printf("Lookbehind match: %s\n", text2);
+    }
+
+    // Test atomic group
+    const char *regex3 = "(?>a|ab)c";
+    const char *text3 = "ac";
+    if (match(regex3, text3)) {
+        printf("Atomic group match: %s\n", text3);
+    }
+
+    // Test character class intersection/subtraction
+    const char *regex4 = "[a-z&&[^aeiou]]";
+    const char *text4 = "b";
+    if (match(regex4, text4)) {
+        printf("Character class intersection match: %s\n", text4);
+    }
+
+    // Test shorthand class \h (horizontal space)
+    const char *regex5 = "\\h";
+    const char *text5 = " ";
+    if (match(regex5, text5)) {
+        printf("Shorthand class match: %s\n", text5);
+    }
+
+    // Test case folding with Unicode
+    const char *regex6 = "(?i)[a-z]";
+    const char *text6 = "A";
+    if (match(regex6, text6)) {
+        printf("Case folding match: %s\n", text6);
+    }
+
+    // Test non-capturing group
+    const char *regex7 = "(?:abc)def";
+    const char *text7 = "abcdef";
+    if (match(regex7, text7)) {
+        printf("Non-capturing group match: %s\n", text7);
+    }

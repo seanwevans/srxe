@@ -1,0 +1,77 @@
+# Object files and static libraries
+*.o
+*.a
+*.so
+*.dll
+*.dylib
+
+# Executable files
+*.exe
+*.out
+*.app
+
+# Debug files
+*.dSYM/
+*.stackdump
+
+# Dependency resolution files
+.deps/
+*.d
+
+# Build directories and tools
+/build/
+*.log
+*.tmp
+*.cache
+
+# Compiled static libraries
+*.lib
+
+# IDE or editor-specific files (for example, Visual Studio Code, CLion, Eclipse)
+.vscode/
+*.swp
+.idea/
+*.iml
+*.user
+*.workspace
+*.sublime-workspace
+*.sublime-project
+*.cproject
+*.project
+
+# Makefile and CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# Autotools generated files
+autom4te.cache/
+aclocal.m4
+compile
+config.guess
+config.log
+config.status
+config.sub
+configure
+depcomp
+install-sh
+libtool
+ltmain.sh
+missing
+stamp-h1
+
+# Other OS-specific files
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux temporary files
+*~
