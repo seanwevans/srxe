@@ -9,56 +9,7 @@ void add_transition(State *from, State *to) {
   from->out[from->out_count++] = to;
 }
 
-bool char_in_class(char c, const char *regex, int *class_len) {
-  const char *start = regex;
-  bool negate = false;
-  bool match = false;
 
-  if (*regex == '^') {
-    negate = true;
-    regex++;
-  }
-
-  while (*regex != ']' && *regex != '\0') {
-    if (*(regex + 1) == '-' && *(regex + 2) != ']') {
-      if (c >= *regex && c <= *(regex + 2)) {
-        match = true;
-      }
-      regex += 3;
-    } else {
-      if (c == *regex) {
-        match = true;
-      }
-      regex++;
-    }
-  }
-
-  *class_len = (regex - start) + 1;
-  return negate ? !match : match;
-}
-
-bool match_unicode_property(char property, char c, bool negate) {
-  bool result = false;
-  switch (property) {
-  case 'L':
-    result = iswalpha(c);
-    break; // Letters
-  case 'N':
-    result = iswdigit(c);
-    break; // Numbers
-  case 'P':
-    result = ispunct(c);
-    break; // Punctuation
-  case 'S':
-    result = isspace(c);
-    break; // Whitespace
-  }
-  return negate ? !result : result;
-}
-
-bool match_unicode_casefold(const char *regex, const char *text, bool case_insensitive) {
-  return case_insensitive ? tolower(*regex) == tolower(*text) : *regex == *text;
-}
 
 FSM *compile(const char *regex) {
   FSM *fsm = (FSM *)malloc(sizeof(FSM));
