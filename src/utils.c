@@ -39,6 +39,7 @@ bool is_whitespace(char c) { return isspace(c); }
 
 // Check if a character is in a character class
 bool char_in_class(char c, const char *regex, int *class_len) {
+  const char *start = regex;
   bool negate = false;
   bool match = false;
 
