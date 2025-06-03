@@ -16,4 +16,8 @@ bool match_word_boundary(const char *text, bool word_boundary);
 bool match_unicode_casefold(const char *regex, const char *text,
                             bool case_insensitive);
 
+// Simple helpers for Unicode scripts
+bool is_greek_script(char c);
+bool is_cyrillic_script(char c);
+
 #endif // SRX_UNICODE_H

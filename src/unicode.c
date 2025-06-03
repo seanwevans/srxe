@@ -2,6 +2,17 @@
 
 #include "unicode.h"
 
+// Placeholder implementations for script checks
+bool is_greek_script(char c) {
+  (void)c;
+  return false;
+}
+
+bool is_cyrillic_script(char c) {
+  (void)c;
+  return false;
+}
+
 bool match_unicode_script(const char *script_name, char c, bool negate) {
   if (strcmp(script_name, "Greek") == 0) {
     return negate ? !is_greek_script(c)
