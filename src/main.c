@@ -21,12 +21,15 @@ void _srxe(const char* regex, const char* text) {
 
 
 int main(int argc, char* argv[]) {
+  const char *regex;
+  const char *text;
+
   if (argc < 2) {
-    const char *regex = "a*b";
-    const char *text = "aaab";  
+    regex = "a*b";
+    text = "aaab";
   } else {
-    const char *regex = argv[1];
-    const char *text = argv[2];
+    regex = argv[1];
+    text = argv[2];
   }
 
   _srxe(regex, text);
