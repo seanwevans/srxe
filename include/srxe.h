@@ -42,14 +42,6 @@ typedef struct FSM {
   State *start;
 } FSM;
 
-State *create_state(StateType type, char match_char) {
-  State *state = (State *)malloc(sizeof(State));
-  state->type = type;
-  state->match_char = match_char;
-  state->out_count = 0;
-  state->out_capacity = INITIAL_TRANSITIONS;
-  state->out = (State **)malloc(INITIAL_TRANSITIONS * sizeof(State *));
-  return state;
-}
+State *create_state(StateType type, char match_char);
 
 #endif // SRX_SRXE_H
