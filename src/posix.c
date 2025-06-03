@@ -2,7 +2,7 @@
 
 #include "posix.h"
 
-bool isascii(unsigned char c) { return c < 128 }
+bool isascii(unsigned char c) { return c < 128; }
 
 bool isblank(unsigned char c) { return c == ' ' || c == '\t'; }
 
