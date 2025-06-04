@@ -2,19 +2,6 @@
 
 #include "unicode.h"
 
-bool match_unicode_script(const char *script_name, char c, bool negate) {
-  if (strcmp(script_name, "Greek") == 0) {
-    return negate ? !is_greek_script(c)
-                  : is_greek_script(c); // Custom function for Greek script
-  }
-  if (strcmp(script_name, "Cyrillic") == 0) {
-    return negate
-               ? !is_cyrillic_script(c)
-               : is_cyrillic_script(c); // Custom function for Cyrillic script
-  }
-  // Add more scripts as needed...
-  return false;
-}
 
 bool match_unicode_property(char property, char c, bool negate) {
   switch (property) {

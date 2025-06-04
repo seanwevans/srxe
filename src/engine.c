@@ -108,10 +108,10 @@ bool match_here(const char *regex, const char *text, bool case_insensitive,
                       multi_line);
   }
 
-  // Handle Unicode script support
+  // Handle Unicode property support
   if (*regex == '\\' && (*(regex + 1) == 'p' || *(regex + 1) == 'P')) {
     bool negate = (*(regex + 1) == 'P');
-    return match_unicode_script(*(regex + 3), *text, negate) &&
+    return match_unicode_property(*(regex + 3), *text, negate) &&
            match_here(regex + 5, text + 1, case_insensitive, dot_all,
                       multi_line);
   }
@@ -161,8 +161,8 @@ bool match_here(const char *regex, const char *text, bool case_insensitive,
 
   // Handle non-greedy {min,} quantifiers
   if (*regex == '{') {
-    int min;
-    parse_braces(regex, &min);
+    int min, max;
+    parse_braces(regex, &min, &max);
     return match_range_infinite(*(regex - 1), regex + 1, text, min,
                                 case_insensitive, dot_all, multi_line);
   }
