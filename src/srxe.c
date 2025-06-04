@@ -1,5 +1,17 @@
 // srxe.c
 
+#include "srxe.h"
+
+State *create_state(StateType type, char match_char) {
+  State *state = (State *)malloc(sizeof(State));
+  state->type = type;
+  state->match_char = match_char;
+  state->out_count = 0;
+  state->out_capacity = INITIAL_TRANSITIONS;
+  state->out = (State **)malloc(INITIAL_TRANSITIONS * sizeof(State *));
+  return state;
+}
+
 void add_transition(State *from, State *to) {
   if (from->out_count >= from->out_capacity) {
     from->out_capacity *= 2;
