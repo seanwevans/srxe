@@ -1,6 +1,6 @@
 // character_classes.h
 
-#ifndef SRX_CHARCATER_CLASSES_H
+#ifndef SRX_CHARACTER_CLASSES_H
 #define SRX_CHARACTER_CLASSES_H
 
 // Handle character class ranges
