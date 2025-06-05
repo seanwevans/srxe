@@ -139,7 +139,8 @@ bool match_here(const char *regex, const char *text, bool case_insensitive,
   // Fixed-length lookbehind assertions ((?<=...) and (?<!...))
   if (*regex == '(' && *(regex + 1) == '?' && (*(regex + 2) == '<')) {
     bool positive = (*(regex + 3) == '=');
-    return match_lookbehind(regex + 4, text, positive, case_insensitive) &&
+    return match_lookbehind(regex + 4, text, positive, case_insensitive,
+                            dot_all, multi_line, 3) &&
            match_here(regex + 4, text, case_insensitive, dot_all, multi_line);
   }
 

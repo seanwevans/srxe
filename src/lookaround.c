@@ -2,21 +2,6 @@
 
 #include "lookaround.h"
 
-// Handle variable-length lookbehind assertions ((?<=...) or (?<!...))
-bool match_lookbehind(const char *regex, const char *text, bool positive,
-                      bool case_insensitive, bool dot_all, bool multi_line) {
-  const char *start = text;
-  // We will attempt to match from the start of the string to the current text
-  // position
-  while (start <= text) {
-    if (match_here(regex, start, case_insensitive, dot_all, multi_line)) {
-      return positive; // Return true if positive lookbehind, false otherwise
-    }
-    start++;
-  }
-  return !positive; // Return false if positive lookbehind, true otherwise
-}
-
 // Handle lookahead assertions ((?=...), (?!...))
 bool match_lookahead(const char *regex, const char *text, bool positive,
                      bool case_insensitive, bool dot_all, bool multi_line) {
