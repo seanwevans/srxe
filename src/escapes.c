@@ -1,6 +1,12 @@
 // escapes.c
 
 #include "escapes.h"
+#include "posix.h"
+#include "utils.h"
+#include "unicode.h"
+#include <ctype.h>
+#include <stdbool.h>
+#include <stdio.h>
 
 // Handle escape sequences like \s, \d, \w, \D, \S, \W, \b, \B, \xHH, \uHHHH
 bool match_escape(char esc, const char *regex, const char *text,

@@ -1,10 +1,18 @@
 // posix.c
 
 #include "posix.h"
+#include <ctype.h>
+#include <stdbool.h>
+#include <string.h>
+#include <stdio.h>
 
+#ifndef isascii
 bool isascii(unsigned char c) { return c < 128; }
+#endif
 
+#ifndef isblank
 bool isblank(unsigned char c) { return c == ' ' || c == '\t'; }
+#endif
 
 typedef struct {
   const char *class_name;

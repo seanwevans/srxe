@@ -3,6 +3,8 @@
 #ifndef SRX_UTILS_H
 #define SRX_UTILS_H
 
+#include <stdbool.h>
+
 // Convert a hexadecimal escape sequence to its integer value
 int hex_to_int(const char *hex);
 

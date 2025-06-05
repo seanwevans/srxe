@@ -3,6 +3,9 @@
 #ifndef SRX_UNICODE_H
 #define SRX_UNICODE_H
 
+#include <stdbool.h>
+#include <wctype.h>
+
 
 // Check if a character matches a Unicode property (like \p{L})
 bool match_unicode_property(char property, char c, bool negate);

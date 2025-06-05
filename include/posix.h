@@ -3,6 +3,8 @@
 #ifndef SRX_POSIX_H
 #define SRX_POSIX_H
 
+#include <stdbool.h>
+
 // Check if a character matches a POSIX character class
 bool match_posix_class(const char *class_name, char c);
 

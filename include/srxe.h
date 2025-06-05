@@ -3,6 +3,8 @@
 #ifndef SRX_SRXE_H
 #define SRX_SRXE_H
 
+#include <stdbool.h>
+
 #define INITIAL_TRANSITIONS 4
 
 void add_transition(State *from, State *to);

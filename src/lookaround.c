@@ -1,6 +1,8 @@
 // lookaround.c
 
 #include "lookaround.h"
+#include <stdbool.h>
+#include "engine.h"
 
 // Handle variable-length lookbehind assertions ((?<=...) or (?<!...))
 bool match_lookbehind(const char *regex, const char *text, bool positive,

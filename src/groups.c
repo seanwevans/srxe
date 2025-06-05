@@ -1,6 +1,9 @@
 // groups.c
 
 #include "groups.h"
+#include "engine.h"
+#include <stdbool.h>
+#include <string.h>
 
 // Handle alternation (|)
 bool match_alternation(const char *regex, const char *text,

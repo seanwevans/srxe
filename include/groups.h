@@ -3,6 +3,8 @@
 #ifndef SRX_GROUPS_H
 #define SRX_GROUPS_H
 
+#include <stdbool.h>
+
 // Handle alternation (|)
 bool match_alternation(const char *regex, const char *text,
                        bool case_insensitive, bool dot_all, bool multi_line);

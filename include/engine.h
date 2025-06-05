@@ -3,6 +3,8 @@
 #ifndef SRX_ENGINE_H
 #define SRX_ENGINE_H
 
+#include <stdbool.h>
+
 #define MAX_GROUPS 256
 
 char captured_groups[MAX_GROUPS][256];
