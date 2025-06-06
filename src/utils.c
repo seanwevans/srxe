@@ -1,6 +1,9 @@
 // utils.c
 
 #include "utils.h"
+#include <ctype.h>
+#include <stdbool.h>
+#include <stdio.h>
 
 // Convert a hexadecimal escape sequence to its integer value
 int hex_to_int(const char *hex) {

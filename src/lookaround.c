@@ -1,6 +1,8 @@
 // lookaround.c
 
 #include "lookaround.h"
+#include <stdbool.h>
+#include "engine.h"
 
 // Handle lookahead assertions ((?=...), (?!...))
 bool match_lookahead(const char *regex, const char *text, bool positive,

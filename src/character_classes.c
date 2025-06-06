@@ -1,6 +1,9 @@
 // character_classes.c
 
 #include "character_classes.h"
+#include <stdbool.h>
+#include <string.h>
+#include "utils.h"
 
 // Handle character class ranges
 bool match_char_class(const char *regex, char c, bool case_insensitive) {

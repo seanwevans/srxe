@@ -3,6 +3,8 @@
 #ifndef SRX_QUANTIFIERS_H
 #define SRX_QUANTIFIERS_H
 
+#include <stdbool.h>
+
 // Greedy (*)
 bool match_star(char c, const char *regex, const char *text,
                 bool case_insensitive, bool dot_all, bool multi_line);

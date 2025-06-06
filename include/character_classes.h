@@ -3,6 +3,8 @@
 #ifndef SRX_CHARACTER_CLASSES_H
 #define SRX_CHARACTER_CLASSES_H
 
+#include <stdbool.h>
+
 // Handle character class ranges
 bool match_char_class(const char *regex, char c, bool case_insensitive);
 

@@ -1,6 +1,12 @@
 // unicode.c
 
 #include "unicode.h"
+#include <stdbool.h>
+#include <wctype.h>
+#include <ctype.h>
+#include "utils.h"
+
+void unicode_casefold(char c, char *out);
 
 
 bool match_unicode_property(char property, char c, bool negate) {
