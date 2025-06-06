@@ -7,6 +7,9 @@
 
 #define INITIAL_TRANSITIONS 4
 
+typedef struct State State;
+typedef struct FSM FSM;
+
 void add_transition(State *from, State *to);
 bool char_in_class(char c, const char *regex, int *class_len);
 bool match_unicode_property(char property, char c, bool negate);
@@ -32,17 +35,17 @@ typedef enum {
   ASSERT_WORD_BOUNDARY // Word boundary \b or \B
 } StateType;
 
-typedef struct State {
+struct State {
   StateType type;
   char match_char;    // Character to match in CHAR or CHAR_CLASS
   struct State **out; // Dynamically allocated array of outgoing transitions
   int out_count;      // Current number of transitions
   int out_capacity;   // Current capacity of the outgoing transitions
-} State;
+};
 
-typedef struct FSM {
+struct FSM {
   State *start;
-} FSM;
+};
 
 State *create_state(StateType type, char match_char);
 
