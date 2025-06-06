@@ -23,4 +23,4 @@ bool char_equals(char c1, char c2, bool case_insensitive);
 // Parse the {min,max} quantifier
 void parse_braces(const char *regex, int *min, int *max);
 
-#endif // UTILS_H
+#endif // SRX_UTILS_H
