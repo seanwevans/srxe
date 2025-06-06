@@ -1,6 +1,11 @@
 
 // test.c
 
+#include <stdio.h>
+#include <stdbool.h>
+
+#include "engine.h"
+
 // Regular Expressions for testing
 const char *rxs[] = {
     "a*b",
@@ -87,10 +92,10 @@ const char *texts[] = {
     "9",
     " ",
     "F",
-    "abcXYZ"
-    "aaa"
-    "special_chars?"
-    "A"
+    "abcXYZ",
+    "aaa",
+    "special_chars?",
+    "A",
     "hello world",
     "b",
     "aaaa",
@@ -239,4 +244,27 @@ void test_set_operations() {
   run_test("Negation Match", "[^a-z]", "1",
            true); // Should match non-lowercase letters
   run_test("Negation Mismatch", "[^a-z]", "a", false);
+}
+
+int main(void) {
+  size_t num_rxs = sizeof(rxs) / sizeof(rxs[0]);
+  size_t num_texts = sizeof(texts) / sizeof(texts[0]);
+  size_t count = num_rxs < num_texts ? num_rxs : num_texts;
+
+  printf("Running pair tests...\n");
+  for (size_t i = 0; i < count; ++i) {
+    char name[32];
+    snprintf(name, sizeof(name), "Pair %zu", i + 1);
+    run_test(name, rxs[i], texts[i], true);
+  }
+
+  printf("\nRunning unit tests...\n");
+  test_basic_features();
+  test_escape_sequences();
+  test_posix_classes();
+  test_quantifiers();
+  test_unicode_properties();
+  test_set_operations();
+
+  return 0;
 }
