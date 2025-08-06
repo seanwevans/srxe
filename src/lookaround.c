@@ -2,6 +2,7 @@
 
 #include "lookaround.h"
 #include <stdbool.h>
+#include <stddef.h>
 #include "engine.h"
 
 // Handle lookahead assertions ((?=...), (?!...))
@@ -16,13 +17,10 @@ bool match_lookahead(const char *regex, const char *text, bool positive,
 bool match_lookbehind(const char *regex, const char *text, bool positive,
                       bool case_insensitive, bool dot_all, bool multi_line,
                       int lookbehind_length) {
-  const char *lookbehind_start =
-      (text >= lookbehind_length) ? text - lookbehind_length : NULL;
-
-  if (lookbehind_start && match_here(regex, lookbehind_start, case_insensitive,
-                                     dot_all, multi_line)) {
+  const char *lookbehind_start = text - lookbehind_length;
+  if (match_here(regex, lookbehind_start, case_insensitive, dot_all,
+                 multi_line)) {
     return positive ? true : false;
   }
-
-  return !positive; // Return false for positive lookbehind if no match
+  return !positive;
 }

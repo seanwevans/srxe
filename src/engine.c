@@ -1,6 +1,10 @@
 // engine.c
 
 #include "engine.h"
+#include <string.h>
+
+char captured_groups[MAX_GROUPS][256];
+int group_lengths[MAX_GROUPS];
 
 // Match the text with the given regex
 bool match_here(const char *regex, const char *text, bool case_insensitive,
@@ -151,14 +155,26 @@ bool match_here(const char *regex, const char *text, bool case_insensitive,
                       multi_line);
   }
 
-  // Handle non-greedy and possessive quantifiers
-  if (*(regex + 1) == '?' && *regex == '*') {
-    return match_star_lazy(*(regex - 1), regex + 2, text, case_insensitive,
-                           dot_all, multi_line);
-  } else if (*(regex + 1) == '+' && *regex == '*') {
-    return match_star_possessive(*(regex - 1), regex + 2, text,
-                                 case_insensitive, dot_all, multi_line);
-  }
+    // Handle non-greedy and possessive quantifiers
+    if (*(regex + 1) == '*' && *(regex + 2) == '?') {
+      return match_star_lazy(*regex, regex + 3, text, case_insensitive,
+                             dot_all, multi_line);
+    } else if (*(regex + 1) == '*' && *(regex + 2) == '+') {
+      return match_star_possessive(*regex, regex + 3, text,
+                                   case_insensitive, dot_all, multi_line);
+    } else if (*(regex + 1) == '+' && *(regex + 2) == '?') {
+      if (*text != '\0' && char_equals(*text, *regex, case_insensitive)) {
+        return match_star_lazy(*regex, regex + 3, text + 1, case_insensitive,
+                               dot_all, multi_line);
+      }
+      return false;
+    } else if (*(regex + 1) == '+' && *(regex + 2) == '+') {
+      if (*text != '\0' && char_equals(*text, *regex, case_insensitive)) {
+        return match_star_possessive(*regex, regex + 3, text + 1,
+                                     case_insensitive, dot_all, multi_line);
+      }
+      return false;
+    }
 
   // Handle non-greedy {min,} quantifiers
   if (*regex == '{') {
@@ -283,22 +299,18 @@ bool match_here(const char *regex, const char *text, bool case_insensitive,
   if (*regex == '[') {
     // Character class matching (e.g., [a-z])
     int class_len = 0;
-    if (*text != '\0') {
-      if (char_equals(*text, regex[1], case_insensitive)) {
-        return match_here(regex + class_len + 1, text + 1, case_insensitive,
-                          dot_all, multi_line); // Skip the character class
-      }
+  if (*text != '\0') {
+    if (char_equals(*text, regex[1], case_insensitive)) {
+      return match_here(regex + class_len + 1, text + 1, case_insensitive,
+                        dot_all, multi_line); // Skip the character class
     }
-    return false;
   }
+  return false;
+}
 
-  // Handle \A and \Z anchors
+  // Handle \A anchor (start of string)
   if (*regex == '\\' && (*(regex + 1) == 'A')) {
-    if (text == original_text) { // Only match at the beginning of the string
-      return match_here(regex + 2, text, case_insensitive, dot_all, multi_line);
-    } else {
-      return false;
-    }
+    return match_here(regex + 2, text, case_insensitive, dot_all, multi_line);
   }
 
   if (*regex == '\\') {
