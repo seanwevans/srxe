@@ -37,7 +37,7 @@ BINARY ?= srxe
 TARGET := $(BINDIR)/$(BINARY)
 
 # Source files
-SRCS := $(shell find $(SRCDIR) -name "*.c")
+SRCS := $(filter-out $(SRCDIR)/srxe.c $(SRCDIR)/main.c, $(shell find $(SRCDIR) -name "*.c"))
 OBJS := $(SRCS:$(SRCDIR)/%.c=$(BUILDDIR_MAIN)/%.o)
 TEST_SRCS := $(shell find $(TESTDIR) -name "*.c")
 TEST_OBJS := $(TEST_SRCS:$(TESTDIR)/%.c=$(BUILDDIR_TEST)/%.o)

@@ -7,8 +7,8 @@
 
 #define MAX_GROUPS 256
 
-char captured_groups[MAX_GROUPS][256];
-int group_lengths[MAX_GROUPS];
+extern char captured_groups[MAX_GROUPS][256];
+extern int group_lengths[MAX_GROUPS];
 
 bool match_here(const char *regex, const char *text, bool case_insensitive,
                 bool dot_all, bool multi_line);

@@ -6,7 +6,10 @@
 #include <ctype.h>
 #include "utils.h"
 
-void unicode_casefold(char c, char *out);
+static void unicode_casefold(char c, char *out) {
+  out[0] = (char)tolower((unsigned char)c);
+  out[1] = '\0';
+}
 
 
 bool match_unicode_property(char property, char c, bool negate) {
@@ -41,7 +44,7 @@ bool match_unicode_casefold(const char *regex, const char *text,
   if (case_insensitive) {
     char folded_char[4]; // Buffer to hold case-folded character
     unicode_casefold(*regex, folded_char); // Assume unicode_casefold function
-    return char_equals(folded_char, text, true);
+    return char_equals(folded_char[0], *text, true);
   }
   return char_equals(*regex, *text, case_insensitive);
 }

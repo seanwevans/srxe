@@ -43,21 +43,14 @@ bool match_atomic_group(const char *regex, const char *text,
   return true;
 }
 
-// Structure to store captured groups
-typedef struct {
-  char *captured_text[MAX_GROUPS];
-  int group_lengths[MAX_GROUPS];
-} group_capture;
-
 // Subroutine Calls ((?1), (?&name))
 bool match_subroutine(const char *regex, const char *text,
                       bool case_insensitive, bool dot_all, bool multi_line,
-                      int group_num, group_capture *captures) {
-  // Match the previous captured group (group_num)
+                      int group_num) {
   if (group_num > 0 && group_num < MAX_GROUPS) {
-    if (strncmp(text, captures->captured_text[group_num],
-                captures->group_lengths[group_num]) == 0) {
-      return match_here(regex, text + captures->group_lengths[group_num],
+    if (strncmp(text, captured_groups[group_num],
+                group_lengths[group_num]) == 0) {
+      return match_here(regex, text + group_lengths[group_num],
                         case_insensitive, dot_all, multi_line);
     }
   }
