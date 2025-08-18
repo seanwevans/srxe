@@ -30,6 +30,7 @@ static State *compile_sequence(const char *regex, State *start) {
       State *dot_state = create_state(DOT, '\0');
       add_transition(current, dot_state);
       current = dot_state;
+
       break;
     }
 
@@ -37,6 +38,14 @@ static State *compile_sequence(const char *regex, State *start) {
       State *star_state = create_state(STAR, '\0');
       add_transition(current, star_state);
       current = star_state;
+      break;
+    }
+
+    case '|': {
+      State *branch_state = create_state(BRANCH, '\0');
+      add_transition(current, branch_state);
+      current = branch_state;
+
       break;
     }
 
@@ -131,12 +140,14 @@ bool match(FSM *fsm, const char *text) {
       }
       break;
 
-    case STAR:
-      while (*text != '\0' && *text == current->match_char) {
+    case STAR: {
+      char repeat = current->match_char;
+      while (*text != '\0' && *text == repeat) {
         text++;
       }
       current = current->out[0];
       break;
+    }
 
     case BRANCH:
       if (current->out_count >= 2) {

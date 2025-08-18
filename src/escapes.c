@@ -10,7 +10,7 @@
 
 // Handle escape sequences like \s, \d, \w, \D, \S, \W, \b, \B, \xHH, \uHHHH
 bool match_escape(char esc, const char *regex, const char *text,
-                  bool case_insensitive) {
+                  const char *start, bool case_insensitive) {
   if (esc == '[' && regex[1] == ':') {
     // Handle POSIX class format [:class_name:]
     return match_posix_bracket_expression(regex, text);
@@ -58,12 +58,18 @@ bool match_escape(char esc, const char *regex, const char *text,
     return isalnum(*text) || *text == '_';
   case 'W':
     return !(isalnum(*text) || *text == '_');
-  case 'b': // Word boundary
-    return (isalnum(*text) || *text == '_') !=
-           (isalnum(*(text - 1)) || *(text - 1) == '_');
-  case 'B': // Not a word boundary
-    return (isalnum(*text) || *text == '_') ==
-           (isalnum(*(text - 1)) || *(text - 1) == '_');
+  case 'b': { // Word boundary
+    bool current = isalnum(*text) || *text == '_';
+    bool previous = (text > start) &&
+                    (isalnum(*(text - 1)) || *(text - 1) == '_');
+    return current != previous;
+  }
+  case 'B': { // Not a word boundary
+    bool current = isalnum(*text) || *text == '_';
+    bool previous = (text > start) &&
+                    (isalnum(*(text - 1)) || *(text - 1) == '_');
+    return current == previous;
+  }
   case '\\':
     return *text == '\\'; // Literal backslash
   case '(':
