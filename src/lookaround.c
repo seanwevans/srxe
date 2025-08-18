@@ -16,11 +16,12 @@ bool match_lookahead(const char *regex, const char *text, bool positive,
 // check
 bool match_lookbehind(const char *regex, const char *text, bool positive,
                       bool case_insensitive, bool dot_all, bool multi_line,
-                      int lookbehind_length) {
+                      int lookbehind_length, const char *start) {
   const char *lookbehind_start = text - lookbehind_length;
-  if (match_here(regex, lookbehind_start, case_insensitive, dot_all,
-                 multi_line)) {
-    return positive ? true : false;
+  if (lookbehind_start < start) {
+    return !positive;
   }
-  return !positive;
+  bool result = match_here(regex, lookbehind_start, case_insensitive, dot_all,
+                           multi_line);
+  return positive ? result : !result;
 }

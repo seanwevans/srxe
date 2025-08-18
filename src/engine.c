@@ -1,11 +1,14 @@
 // engine.c
 
 #include "engine.h"
+#include "lookaround.h"
 #include "escapes.h"
 #include <string.h>
 
 char captured_groups[MAX_GROUPS][256];
 int group_lengths[MAX_GROUPS];
+
+static const char *input_start;
 static const char *text_start;
 
 // Match the text with the given regex
@@ -34,7 +37,7 @@ bool match_here(const char *regex, const char *text, bool case_insensitive,
       (*(regex + 2) == '<' && (*(regex + 3) == '=' || *(regex + 3) == '!'))) {
     bool positive = (*(regex + 3) == '=');
     return match_lookbehind(regex + 4, text, positive, case_insensitive,
-                            dot_all, multi_line, 3); // Example length
+                            dot_all, multi_line, 3, input_start); // Example length
   }
 
   // Lookahead assertions
@@ -50,7 +53,7 @@ bool match_here(const char *regex, const char *text, bool case_insensitive,
       (*(regex + 2) == '<' && (*(regex + 3) == '=' || *(regex + 3) == '!'))) {
     bool positive = (*(regex + 3) == '=');
     return match_lookbehind(regex + 4, text, positive, case_insensitive,
-                            dot_all, multi_line, 3); // Fixed-length example
+                            dot_all, multi_line, 3, input_start); // Fixed-length example
   }
 
   // Atomic groups (?>...)
@@ -146,7 +149,7 @@ bool match_here(const char *regex, const char *text, bool case_insensitive,
   if (*regex == '(' && *(regex + 1) == '?' && (*(regex + 2) == '<')) {
     bool positive = (*(regex + 3) == '=');
     return match_lookbehind(regex + 4, text, positive, case_insensitive,
-                            dot_all, multi_line, 3) &&
+                            dot_all, multi_line, 3, input_start) &&
            match_here(regex + 4, text, case_insensitive, dot_all, multi_line);
   }
 
@@ -348,6 +351,7 @@ bool match(const char *regex, const char *text) {
   bool case_insensitive = false;
   bool dot_all = false;
   bool multi_line = false;
+  input_start = text;
 
   // Process flags at the beginning of the regex
   while (*regex == '(' && *(regex + 1) == '?' && strchr("ism", *(regex + 2))) {
