@@ -60,7 +60,15 @@ FSM *compile(const char *regex) {
     case '[':
       // Handle character classes
       {
-        int class_len;
+        int class_len = 0;
+        const char *class_ptr = regex + 1;
+        while (*class_ptr != '\0' && *class_ptr != ']') {
+          class_ptr++;
+          class_len++;
+        }
+        if (*class_ptr == ']') {
+          class_len++;
+        }
         State *char_class_state = create_state(CHAR_CLASS, '\0');
         current->out[0] = char_class_state;
         current = char_class_state;
