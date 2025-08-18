@@ -31,48 +31,59 @@ FSM *compile(const char *regex) {
   State *current = start_state;
   while (*regex != '\0') {
     switch (*regex) {
-    case '.':
-      current->out[0] = create_state(DOT, '\0');
-      current = current->out[0];
+    case '.': {
+      State *dot_state = create_state(DOT, '\0');
+      add_transition(current, dot_state);
+      current = dot_state;
       break;
+    }
 
-    case '*':
-      current->out[0] = create_state(STAR, '\0');
-      current = current->out[0];
+    case '*': {
+      State *star_state = create_state(STAR, '\0');
+      add_transition(current, star_state);
+      current = star_state;
       break;
+    }
 
-    case '|':
+    case '|': {
       State *branch_state = create_state(BRANCH, '\0');
       add_transition(current, branch_state);
       current = branch_state;
       break;
+    }
 
-    case '+':
-      current->out[0] = create_state(PLUS, '\0');
-      current = current->out[0];
+    case '+': {
+      State *plus_state = create_state(PLUS, '\0');
+      add_transition(current, plus_state);
+      current = plus_state;
       break;
+    }
 
-    case '?':
-      current->out[0] = create_state(QUESTION, '\0');
-      current = current->out[0];
+    case '?': {
+      State *question_state = create_state(QUESTION, '\0');
+      add_transition(current, question_state);
+      current = question_state;
       break;
+    }
 
     case '[':
       // Handle character classes
       {
         int class_len;
         State *char_class_state = create_state(CHAR_CLASS, '\0');
-        current->out[0] = char_class_state;
+        add_transition(current, char_class_state);
         current = char_class_state;
         regex += class_len;
       }
       break;
 
-    default:
+    default: {
       // Default case handles specific character matching
-      current->out[0] = create_state(CHAR, *regex);
-      current = current->out[0];
+      State *char_state = create_state(CHAR, *regex);
+      add_transition(current, char_state);
+      current = char_state;
       break;
+    }
     }
     regex++;
   }
