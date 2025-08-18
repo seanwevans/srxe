@@ -6,6 +6,14 @@
 
 #include "engine.h"
 
+// Include the simple FSM engine with renamed symbols to avoid conflicts
+#define compile srxe_compile
+#define match srxe_match
+#include "srxe.h"
+#include "../src/srxe.c"
+#undef compile
+#undef match
+
 // Regular Expressions for testing
 const char *rxs[] = {
     "a*b",
@@ -129,6 +137,21 @@ void run_test(const char *test_name, const char *regex, const char *text,
   }
 }
 
+// Helper for tests using the SRXE FSM engine
+void run_srxe_test(const char *test_name, const char *regex, const char *text,
+                   bool expected) {
+  FSM *fsm = srxe_compile(regex);
+  bool result = srxe_match(fsm, text);
+  if (result == expected) {
+    printf("[PASS] %s\n", test_name);
+  } else {
+    printf("[FAIL] %s - Regex: '%s', Text: '%s', Expected: %s, Got: %s\n",
+           test_name, regex, text, expected ? "true" : "false",
+           result ? "true" : "false");
+  }
+  free_fsm(fsm);
+}
+
 // Unit Test Suite for Basic Features
 void test_basic_features() {
   printf("Running tests for Basic Features...\n");
@@ -155,6 +178,12 @@ void test_escape_sequences() {
   // Word Boundaries
   run_test("Word Boundary Match", "\\bhello\\b", "hello world", true);
   run_test("Word Boundary Mismatch", "\\bhello\\b", "ahello world", false);
+
+  // Word boundary at beginning and end of string
+  run_test("Word Boundary Start Match", "\\bword", "word", true);
+  run_test("Word Boundary Start Mismatch", "\\bword", "sword", false);
+  run_test("Word Boundary End Match", "word\\b", "word", true);
+  run_test("Word Boundary End Mismatch", "word\\b", "wordsmith", false);
 
   // Whitespace
   run_test("Whitespace Match", "\\s", " ", true);
@@ -219,6 +248,13 @@ void test_quantifiers() {
   run_test("Possessive Plus Mismatch", "a++", "aaaab", false);
 }
 
+// Tests for the simple FSM engine in srxe.c
+void test_srxe_engine() {
+  printf("Running tests for SRXE engine...\n");
+  run_srxe_test("SRXE Star Match Multiple", "a*", "aaaa", true);
+  run_srxe_test("SRXE Star Match Empty", "a*", "", true);
+}
+
 // Unit Test Suite for Unicode Properties
 void test_unicode_properties() {
   printf("Running tests for Unicode Properties...\n");
@@ -244,6 +280,18 @@ void test_set_operations() {
   run_test("Negation Match", "[^a-z]", "1",
            true); // Should match non-lowercase letters
   run_test("Negation Mismatch", "[^a-z]", "a", false);
+
+  // Intersection with leading negation
+  run_test("Negated Intersection Match", "[^a-z&&[^aeiou]]", "a", true);
+  run_test("Negated Intersection Mismatch", "[^a-z&&[^aeiou]]", "b", false);
+}
+
+// Unit Test Suite for Lookbehind Boundaries
+void test_lookbehind_boundaries() {
+  printf("Running tests for Lookbehind Boundaries...\n");
+
+  run_test("Positive lookbehind start failure", "(?<=abc)d", "d", false);
+  run_test("Negative lookbehind start success", "(?<!abc)d", "d", true);
 }
 
 int main(void) {
@@ -263,8 +311,10 @@ int main(void) {
   test_escape_sequences();
   test_posix_classes();
   test_quantifiers();
+  test_srxe_engine();
   test_unicode_properties();
   test_set_operations();
+  test_lookbehind_boundaries();
 
   return 0;
 }

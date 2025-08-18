@@ -1,6 +1,7 @@
 // srxe.c
 
 #include "srxe.h"
+#include <stdlib.h>
 
 State *create_state(StateType type, char match_char) {
   State *state = (State *)malloc(sizeof(State));
@@ -69,7 +70,15 @@ FSM *compile(const char *regex) {
     case '[':
       // Handle character classes
       {
-        int class_len;
+        int class_len = 0;
+        const char *class_ptr = regex + 1;
+        while (*class_ptr != '\0' && *class_ptr != ']') {
+          class_ptr++;
+          class_len++;
+        }
+        if (*class_ptr == ']') {
+          class_len++;
+        }
         State *char_class_state = create_state(CHAR_CLASS, '\0');
         add_transition(current, char_class_state);
         current = char_class_state;
@@ -91,6 +100,10 @@ FSM *compile(const char *regex) {
   // Add an accept state at the end of the FSM
   State *accept_state = create_state(ACCEPT, '\0');
   add_transition(current, accept_state);
+
+  // Skip the initial BEGIN state for matching
+  fsm->start = start_state->out[0];
+
   return fsm;
 }
 
@@ -117,12 +130,14 @@ bool match(FSM *fsm, const char *text) {
       }
       break;
 
-    case STAR:
-      while (*text != '\0' && *text == current->match_char) {
+    case STAR: {
+      char repeat = current->match_char;
+      while (*text != '\0' && *text == repeat) {
         text++;
       }
       current = current->out[0];
       break;
+    }
 
     case BRANCH:
       return match(current->out[0], text) || match(current->out[1], text);

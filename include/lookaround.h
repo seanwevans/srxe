@@ -13,6 +13,6 @@ bool match_lookahead(const char *regex, const char *text, bool positive,
 // Handle lookbehind assertions ((?<=...), (?<!...))
 bool match_lookbehind(const char *regex, const char *text, bool positive,
                       bool case_insensitive, bool dot_all, bool multi_line,
-                      int lookbehind_length);
+                      int lookbehind_length, const char *start);
 
 #endif // SRX_LOOKAROUND_H
