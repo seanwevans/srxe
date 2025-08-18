@@ -2,6 +2,7 @@
 
 #include "srxe.h"
 #include <stdlib.h>
+#include <string.h>
 
 State *create_state(StateType type, char match_char) {
   State *state = (State *)malloc(sizeof(State));
@@ -21,21 +22,15 @@ void add_transition(State *from, State *to) {
   }
   from->out[from->out_count++] = to;
 }
-
-
-
-FSM *compile(const char *regex) {
-  FSM *fsm = (FSM *)malloc(sizeof(FSM));
-  State *start_state = create_state(BEGIN, '\0');
-  fsm->start = start_state;
-
-  State *current = start_state;
-  while (*regex != '\0') {
+static State *compile_sequence(const char *regex, State *start) {
+  State *current = start;
+  while (*regex != '\0' && *regex != '|') {
     switch (*regex) {
     case '.': {
       State *dot_state = create_state(DOT, '\0');
       add_transition(current, dot_state);
       current = dot_state;
+
       break;
     }
 
@@ -50,6 +45,7 @@ FSM *compile(const char *regex) {
       State *branch_state = create_state(BRANCH, '\0');
       add_transition(current, branch_state);
       current = branch_state;
+
       break;
     }
 
@@ -67,27 +63,16 @@ FSM *compile(const char *regex) {
       break;
     }
 
-    case '[':
-      // Handle character classes
-      {
-        int class_len = 0;
-        const char *class_ptr = regex + 1;
-        while (*class_ptr != '\0' && *class_ptr != ']') {
-          class_ptr++;
-          class_len++;
-        }
-        if (*class_ptr == ']') {
-          class_len++;
-        }
-        State *char_class_state = create_state(CHAR_CLASS, '\0');
-        add_transition(current, char_class_state);
-        current = char_class_state;
-        regex += class_len;
-      }
-      break;
+    case '[': {
+      int class_len;
+      State *char_class_state = create_state(CHAR_CLASS, '\0');
+      add_transition(current, char_class_state);
+      current = char_class_state;
+      regex += class_len;
+      continue;
+    }
 
     default: {
-      // Default case handles specific character matching
       State *char_state = create_state(CHAR, *regex);
       add_transition(current, char_state);
       current = char_state;
@@ -96,13 +81,38 @@ FSM *compile(const char *regex) {
     }
     regex++;
   }
+  return current;
+}
 
-  // Add an accept state at the end of the FSM
+FSM *compile(const char *regex) {
+  FSM *fsm = (FSM *)malloc(sizeof(FSM));
+  State *start_state = create_state(BEGIN, '\0');
+  fsm->start = start_state;
   State *accept_state = create_state(ACCEPT, '\0');
-  add_transition(current, accept_state);
 
-  // Skip the initial BEGIN state for matching
-  fsm->start = start_state->out[0];
+  const char *branch_pos = strchr(regex, '|');
+  if (branch_pos) {
+    size_t left_len = branch_pos - regex;
+    char *left = (char *)malloc(left_len + 1);
+    strncpy(left, regex, left_len);
+    left[left_len] = '\0';
+    char *right = strdup(branch_pos + 1);
+
+    State *branch_state = create_state(BRANCH, '\0');
+    add_transition(start_state, branch_state);
+
+    State *left_end = compile_sequence(left, branch_state);
+    State *right_end = compile_sequence(right, branch_state);
+
+    add_transition(left_end, accept_state);
+    add_transition(right_end, accept_state);
+
+    free(left);
+    free(right);
+  } else {
+    State *end = compile_sequence(regex, start_state);
+    add_transition(end, accept_state);
+  }
 
   return fsm;
 }
@@ -140,7 +150,13 @@ bool match(FSM *fsm, const char *text) {
     }
 
     case BRANCH:
-      return match(current->out[0], text) || match(current->out[1], text);
+      if (current->out_count >= 2) {
+        return match(current->out[0], text) || match(current->out[1], text);
+      } else if (current->out_count == 1 && current->out[0] != NULL) {
+        return match(current->out[0], text);
+      } else {
+        return false;
+      }
 
     case ACCEPT:
       return true;
