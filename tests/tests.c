@@ -246,6 +246,14 @@ void test_set_operations() {
   run_test("Negation Mismatch", "[^a-z]", "a", false);
 }
 
+// Unit Test Suite for Lookbehind Boundaries
+void test_lookbehind_boundaries() {
+  printf("Running tests for Lookbehind Boundaries...\n");
+
+  run_test("Positive lookbehind start failure", "(?<=abc)d", "d", false);
+  run_test("Negative lookbehind start success", "(?<!abc)d", "d", true);
+}
+
 int main(void) {
   size_t num_rxs = sizeof(rxs) / sizeof(rxs[0]);
   size_t num_texts = sizeof(texts) / sizeof(texts[0]);
@@ -265,6 +273,7 @@ int main(void) {
   test_quantifiers();
   test_unicode_properties();
   test_set_operations();
+  test_lookbehind_boundaries();
 
   return 0;
 }
