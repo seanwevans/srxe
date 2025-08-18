@@ -244,6 +244,10 @@ void test_set_operations() {
   run_test("Negation Match", "[^a-z]", "1",
            true); // Should match non-lowercase letters
   run_test("Negation Mismatch", "[^a-z]", "a", false);
+
+  // Intersection with leading negation
+  run_test("Negated Intersection Match", "[^a-z&&[^aeiou]]", "a", true);
+  run_test("Negated Intersection Mismatch", "[^a-z&&[^aeiou]]", "b", false);
 }
 
 int main(void) {

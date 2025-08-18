@@ -62,14 +62,17 @@ bool match_multichar_class(const char *regex, const char *text,
 // Intersection and subtraction in character classes
 bool match_intersection_class(const char *regex, const char *text,
                               bool case_insensitive) {
+  const char *start = regex;
   bool negate = false, found = false;
   bool subtracted = false;
   char char_class[256] = {0};
   char excluded_class[256] = {0};
 
   while (*regex != ']' && *regex != '\0') {
-    if (*regex == '^' && regex == text + 1) {
+    if (*regex == '^' && regex == start) {
       negate = true;
+      regex++;
+      continue;
     } else if (*regex == '[' && *(regex + 1) == '&') {
       regex += 3;
       subtracted = true;
