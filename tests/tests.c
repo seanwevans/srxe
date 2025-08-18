@@ -179,6 +179,12 @@ void test_escape_sequences() {
   run_test("Word Boundary Match", "\\bhello\\b", "hello world", true);
   run_test("Word Boundary Mismatch", "\\bhello\\b", "ahello world", false);
 
+  // Word boundary at beginning and end of string
+  run_test("Word Boundary Start Match", "\\bword", "word", true);
+  run_test("Word Boundary Start Mismatch", "\\bword", "sword", false);
+  run_test("Word Boundary End Match", "word\\b", "word", true);
+  run_test("Word Boundary End Mismatch", "word\\b", "wordsmith", false);
+
   // Whitespace
   run_test("Whitespace Match", "\\s", " ", true);
   run_test("Non-Whitespace Mismatch", "\\s", "a", false);

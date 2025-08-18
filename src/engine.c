@@ -1,10 +1,12 @@
 // engine.c
 
 #include "engine.h"
+#include "escapes.h"
 #include <string.h>
 
 char captured_groups[MAX_GROUPS][256];
 int group_lengths[MAX_GROUPS];
+static const char *text_start;
 
 // Match the text with the given regex
 bool match_here(const char *regex, const char *text, bool case_insensitive,
@@ -188,7 +190,8 @@ bool match_here(const char *regex, const char *text, bool case_insensitive,
   if (*regex == '\\' && (*(regex + 1) == 'x' || *(regex + 1) == 'u')) {
     // Handle \xHH or \uHHHH escape sequences
     int num_chars = (*(regex + 1) == 'x') ? 2 : 4;
-    if (match_escape(*(regex + 1), regex + 2, text, case_insensitive)) {
+    if (match_escape(*(regex + 1), regex + 2, text, text_start,
+                     case_insensitive)) {
       return match_here(regex + num_chars + 2, text + 1, case_insensitive,
                         dot_all, multi_line);
     }
@@ -315,8 +318,10 @@ bool match_here(const char *regex, const char *text, bool case_insensitive,
 
   if (*regex == '\\') {
     // Handle escape sequences like \s, \d, \w, \D, \S, \W, \b, \B
-    if (match_escape(*(regex + 1), *text, text, case_insensitive)) {
-      return match_here(regex + 2, text + 1, case_insensitive, dot_all,
+    char esc = *(regex + 1);
+    if (match_escape(esc, regex + 2, text, text_start, case_insensitive)) {
+      const char *next_text = (esc == 'b' || esc == 'B') ? text : text + 1;
+      return match_here(regex + 2, next_text, case_insensitive, dot_all,
                         multi_line);
     } else {
       return false;
@@ -339,6 +344,7 @@ bool match_here(const char *regex, const char *text, bool case_insensitive,
 
 // Entry point for regex matching
 bool match(const char *regex, const char *text) {
+  text_start = text;
   bool case_insensitive = false;
   bool dot_all = false;
   bool multi_line = false;
