@@ -1,4 +1,5 @@
 # Sean's Regular eXpression Engine (SRXE)
+<img width="256" alt="brum brum brum brum brum brum brum" src="https://github.com/user-attachments/assets/581fc903-7d31-4faa-8bd2-04b6a8dd1d32" />
 
 ## Overview
 
